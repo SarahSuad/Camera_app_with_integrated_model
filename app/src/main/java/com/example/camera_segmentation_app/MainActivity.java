@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -183,6 +185,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mPreview = (TextureView) findViewById(R.id.PreviewView);
+        mTTs= new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if(i!= TextToSpeech.ERROR){
+                    mTTs.setLanguage(Locale.US);
+
+                }
+                else{
+                    Toast.makeText(MainActivity.this,"ERROR",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
@@ -385,6 +399,11 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(MainActivity.this,lineToSpeak,Toast.LENGTH_LONG).show();
         //speak
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mTTs.speak(lineToSpeak,TextToSpeech.QUEUE_FLUSH,null,null);
+        } else {
+            mTTs.speak(lineToSpeak, TextToSpeech.QUEUE_FLUSH, null);
+        }
 
     }
 
